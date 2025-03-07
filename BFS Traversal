@@ -1,0 +1,47 @@
+# Python3 Program to print BFS traversal from a given source vertex.
+from collections import defaultdict
+
+# This class represents a directed graph using adjacency list representation
+class Graph:
+    def __init__(self):
+        # Default dictionary to store graph
+        self.graph = defaultdict(list)
+    
+    # Function to add an edge to the graph
+    def addEdge(self, u, v):
+        self.graph[u].append(v)
+
+    # Function to perform BFS traversal
+    def BFS(self, s):
+        # Create a queue for BFS
+        queue = []
+        
+        # Create a set to track visited nodes
+        visited = set()
+
+        # Add the source node to visited and enqueue it
+        queue.append(s)
+        visited.add(s)
+
+        while queue:
+            # Dequeue a vertex from the queue and print it
+            s = queue.pop(0)
+            print(s, end=" ")
+
+            # Get all adjacent vertices of the dequeued vertex
+            for i in self.graph[s]:
+                if i not in visited:
+                    queue.append(i)
+                    visited.add(i)  # Mark as visited
+
+# Driver code
+g = Graph()
+g.addEdge(0, 1)
+g.addEdge(0, 2)
+g.addEdge(1, 2)
+g.addEdge(2, 0)
+g.addEdge(2, 3)
+g.addEdge(3, 3)
+
+print("Following is Breadth-First Traversal (starting from vertex 2):")
+g.BFS(2)
