@@ -1,0 +1,56 @@
+import numpy as np
+import random
+from time import sleep
+
+# Function to create an empty board
+def create_board():
+    return np.zeros((3, 3), dtype=int)
+
+# Function to find all empty positions
+def possibilities(board):
+    return [(i, j) for i in range(3) for j in range(3) if board[i, j] == 0]
+
+# Function to randomly place a player's move
+def random_place(board, player):
+    selection = possibilities(board)
+    if selection:
+        current_loc = random.choice(selection)
+        board[current_loc[0], current_loc[1]] = player  # Fix placement
+    return board
+
+# Function to check if a player has won
+def check_win(board, player):
+    return (
+        any(np.all(board == player, axis=0)) or  # Check columns
+        any(np.all(board == player, axis=1)) or  # Check rows
+        np.all(np.diag(board) == player) or      # Check main diagonal
+        np.all(np.diag(np.fliplr(board)) == player)  # Check secondary diagonal
+    )
+
+# Function to evaluate the game status
+def evaluate(board):
+    for player in [1, 2]:
+        if check_win(board, player):
+            return player  # Return the winning player
+    return -1 if np.all(board != 0) else 0  # Return -1 for draw, 0 for ongoing game
+
+# Main function to play the game
+def play_game():
+    board, winner, counter = create_board(), 0, 1
+    print("Initial Board:\n", board, "\n")
+    sleep(2)
+
+    while winner == 0:
+        for player in [1, 2]:
+            board = random_place(board, player)
+            print(f"Board after {counter} move by Player {player}:\n", board, "\n")
+            sleep(2)
+            counter += 1
+            winner = evaluate(board)
+            if winner != 0:
+                break  # Stop the game when a winner is found
+
+    return f"Winner is Player {winner}!" if winner > 0 else "It's a Draw!"
+
+# Driver Code
+print(play_game())
